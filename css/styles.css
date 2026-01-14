@@ -1,0 +1,635 @@
+/* 
+    Variables Globales y Paleta de Colores
+*/
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+    /* Colores */
+    --color-primary: #999756;   /* Olive Green */
+    --color-bg: #FEF1D2;        /* Cream */
+    --color-accent-1: #FACD64;  /* Golden Yellow */
+    --color-accent-2: #FF7D7D;  /* Coral Red */
+    --color-accent-3: #C8D7FA;  /* Light Blue */
+    
+    /* Utilidades */
+    --font-main: 'JetBrains Mono', monospace;
+    --pixel-size: 4px; /* La base por si necesito hacer algo pixelado */
+    
+    --transition-speed: 0.5s;
+}
+
+/* 
+    Reset y Estilos Base
+*/
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-primary);
+    font-family: var(--font-main);
+    overflow: hidden; /* Controlamos el scroll manualmente */
+    height: 100vh;
+    width: 100vw;
+}
+
+/* 
+    Contenedor Principal de la Historia
+*/
+main {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+/* 
+    Estilos de Sección/Fase
+*/
+.phase {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem;
+    padding-top: 80px;
+}
+
+.content-wrapper {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.phase-header {
+    margin-bottom: 2rem;
+    flex: 0 0 auto;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.instruction {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+    opacity: 0.8;
+}
+
+/* 
+    Escena Pixel Art
+*/
+.pixel-scene {
+    flex: 1 1 auto;
+    position: relative;
+    background: rgba(255, 255, 255, 0.5);
+    border: 4px solid var(--color-primary);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 
+    UI de la interacción tipo juego (Navegación)
+*/
+.game-ui {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    z-index: 100;
+    display: flex;
+    justify-content: center; /* Menu centrado */
+    align-items: center;
+    pointer-events: none; /* clicks pasan si es solo espacio vacío */
+}
+.game-ui > * {
+    pointer-events: auto;
+}   
+
+/* Menu de la fase (Números 1-5) */
+.phase-menu {
+    display: flex;
+    gap: 8px;
+}
+
+.menu-btn {
+    width: 25px; /* tamaño pequeño */
+    height: 25px;
+    background: var(--color-primary);
+    color: var(--color-bg);
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    text-decoration: none; /* para que no haya subrayado si se usa un enlace */
+}
+
+/* estados del menu botón */
+.menu-btn {
+    filter: grayscale(1);
+    opacity: 0.7;
+}
+
+.menu-btn:hover {
+    transform: translateY(-2px);
+    opacity: 1;
+    filter: grayscale(0.5);
+}
+
+.menu-btn.active {
+    filter: grayscale(0);
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+    pointer-events: none; /* ya no se puede hacer clic */
+}
+
+/* botones base */
+.nav-btn, .next-btn, .choice-btn {
+    background: var(--color-primary);
+    color: var(--color-bg);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-family: inherit;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: transform 0.1s, opacity 0.3s;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+}
+
+/* botones de la interacción tipo juego */
+
+.nav-btn:active, .next-btn:active, .choice-btn:active {
+    box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+}
+
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* Utilidades Pixel Art */
+.pixel-art {
+    image-rendering: pixelated;
+}
+
+/* advertencia de orientación móvil – Importante para que se visualice mejor en dispositivos móviles */
+.orientation-warning {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--color-accent-2);
+    padding: 2rem;
+}
+
+@media screen and (orientation: landscape) and (max-width: 1024px) {
+    .orientation-warning {
+        display: flex;
+    }
+    main, .game-ui {
+        visibility: hidden; /* ocultar UI pero mantener el layout si es necesario, o display none */
+    }
+}
+
+/* puntos de corte responsive */
+@media (max-width: 768px) {
+    h1 { font-size: 1.8rem; }
+    .instruction { font-size: 1rem; }
+    
+    /* Forzar portrait en mobile si es necesario, o mostrar warning */
+    /* En este caso, el CSS es flexible, pero si se pide "vertical orientation only" 
+       para mobile, a veces se usa JS para detectar. Aquí solo ajustamos layout */
+}
+
+
+/* 
+   ------> Fase 1: Pre-migración <------
+*/
+
+/* Contenedor de escena 1 */
+#scene1 {
+    position: relative;
+    width: 100%;
+    height: 300px; /* altura fija para la posición aleatoria */
+    background: rgba(255, 255, 255, 0.2); /* Si decido poner un fondo, aqui se coloca */
+    border: 4px solid var(--color-primary);
+}
+
+/* Suitcase */
+.suitcase-base {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px; /* Ancho base */
+    height: auto;
+    z-index: 10;
+    transition: transform 0.3s ease;
+}
+
+.suitcase-base.packed {
+    animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.1); }
+}
+
+/* Items Layer */
+.items-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+    pointer-events: none; /* los clicks pasan a los items, pero el contenedor no debe bloquear */
+}
+
+/* Item Styles */
+.pack-item {
+    position: absolute; /* posición aleatoria */
+    width: 60px; /* tamaño base */
+    height: auto;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+}
+
+.pack-item:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 5px var(--color-accent-1));
+}
+
+.pack-item.packed {
+    opacity: 0;
+    transform: scale(0) translate(0, 100px); /* se mueven hacia abajo */
+    pointer-events: none;
+}
+
+@media (min-width: 768px) {
+    .pack-item {
+        width: 80px; /* más grande en desktop */
+    }
+}
+
+/* 
+   ----> Fase 2: Elementos de Tránsito <----
+*/
+
+#scene2 {
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    background: linear-gradient(to bottom, var(--color-bg) 0%, rgba(200, 215, 250, 0.2) 100%);
+    position: relative;
+}
+
+/* Arrastrar de Suitcase imagen >D */
+.travelsuitcase {
+    width: 60px; /* tamaño base */
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 10%; /* posición inicial */
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    z-index: 20;
+    touch-action: none; 
+    transition: transform 0.1s;
+}
+
+.travelsuitcase:active {
+    cursor: grabbing;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* La guía de movimiento */
+.destination-marker {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 50%;
+    right: 10%; /* posición final */
+    transform: translateY(-50%);
+    border: 4px dashed var(--color-accent-1);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    z-index: 5;
+}
+
+@keyframes pulse {
+    0% { transform: translateY(-50%) scale(1); opacity: 0.5; }
+    50% { transform: translateY(-50%) scale(1.2); opacity: 1; }
+    100% { transform: translateY(-50%) scale(1); opacity: 0.5; }
+}
+
+/* 
+   ----> Fase 3: Elementos de Llegada <----
+*/
+
+/* Desactivar el scroll del wrapper anterior */
+#phase3 .content-wrapper.scroll-phase {
+    overflow-y: visible;
+    height: auto;
+    padding-bottom: 0;
+}
+
+/* Scroll solo del contenedor */
+#scene3.scroll-scene {
+    flex: 1 1 auto; /* Debo modificarlo, para que quede mejor, el boton se superpone, debe reducir la altura */
+    height: auto;   /* Revisar aquí NATHALIA */
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: block; 
+    position: relative;
+    border: 4px solid var(--color-primary); /* Borde para todos los contenedores iguales */
+    background: linear-gradient(to bottom, #C8D7FA 0%, var(--color-bg) 100%);
+    
+    /* Estilo de la barra de desplazamiento */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) var(--color-bg);
+}
+
+#scene3.scroll-scene::-webkit-scrollbar {
+    width: 6px;
+}
+#scene3.scroll-scene::-webkit-scrollbar-track {
+    background: var(--color-bg);
+}
+#scene3.scroll-scene::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    border-radius: 3px;
+}
+
+.scroll-content {
+    height: 1200px; /* Altura de desplazamiento, contenedor interno */
+    position: relative;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Clouds */
+.cloud {
+    position: absolute;
+    width: 80%;
+    max-width: 200px;
+    height: auto;
+    opacity: 0.9;
+}
+
+.cloud-1 { top: 50px; left: -20px; animation: float 6s infinite ease-in-out; }
+.cloud-2 { top: 400px; right: -20px; animation: float 8s infinite ease-in-out reverse; }
+.cloud-3 { top: 800px; left: 10%; animation: float 7s infinite ease-in-out; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Imagenes en la base de llegada */
+.arrival-base {
+    margin-top: auto; 
+    display: flex;
+    justify-content: center;
+    gap: 50px; /* Espaciado aumentado */
+    width: 100%;
+    position: relative;
+    
+    /* Base, para que no queden en el aire jejeje */
+    border-bottom: 20px solid var(--color-primary); 
+}
+
+.arrival-img {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 4px 0 rgba(0,0,0,0.1));
+    margin-bottom: 0px; /* Para que queden en la base */
+}
+
+/* Texto que aparece dentro de la base de llegada */
+.arrival-text {
+    position: absolute;     
+    bottom: 200px; /* Por encima de las imágenes */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-primary);
+    pointer-events: none;
+    opacity: 0; 
+    transition: opacity 0.5s;
+    z-index: 10;
+}
+
+.next-btn-phase3 {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+}
+
+/*
+   ---> Fase 4: Elementos de Stay <---
+*/
+
+#scene4 {
+    align-items: center;
+    justify-content: center;
+}
+
+.community-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Le llamo house, porque incialmente eran casas, pero decidí reemplazarlas por imágenes simbolicas en pixel art */
+.house-item {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.house-item:hover {
+    transform: translateY(-5px);
+}
+
+.house-img {
+    width: 100%;
+    max-width: 70px; /* El tamaño de las imágenes */
+    height: auto;
+    transition: filter 0.3s ease;
+}
+
+.house-item:hover .house-img {
+    filter: grayscale(0) opacity(1);
+}
+
+.house-item.connected .house-img {
+    filter: grayscale(0) opacity(1) drop-shadow(0 0 5px var(--color-accent-1));
+}
+
+/* Efecto de corazón */
+.house-item.connected::after {
+    content: '♥';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1rem;
+    color: var(--color-accent-2);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+    0% { transform: translateX(-50%) scale(0); opacity: 0; }
+    100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
+.next-btn-phase4 {
+    margin-top: 20px;
+}
+
+/*
+   ---> Fase 5: Activos de Retorno <---
+ */
+
+.choice-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.choice-btn {
+    width: 140px; 
+    height: 140px;
+    border-radius: 8px;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 4px solid var(--color-primary);
+    color: var(--color-primary);
+    box-shadow: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-family: var(--font-main);
+    font-weight: 700;
+}
+
+.choice-btn:hover {
+    background: var(--color-primary);
+    color: var(--color-bg);
+    transform: translateY(-5px);
+}
+
+.choice-img {
+    width: 50px; 
+    height: auto;
+    margin-bottom: 10px;
+    transition: filter 0.3s ease;
+}
+
+.choice-btn:hover .choice-img {
+    filter: brightness(0) invert(1); /* Tener en cuenta que el filtro puede no funcionar bien con imágenes en blanco y negro */
+    filter: none; 
+    transform: scale(1.1);
+}
+
+.final-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-bg);
+    padding: 2rem;
+    border: 4px solid var(--color-primary);
+    text-align: center;
+    z-index: 50;
+    width: 80%;
+    max-width: 400px;
+    animation: fadeIn 0.5s ease;
+    
+    /* Espaciado entre elementos */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.close-msg-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    line-height: 1;
+    padding: 5px;
+    transition: transform 0.2s;
+}
+
+.close-msg-btn:hover {
+    transform: scale(1.2);
+    color: var(--color-accent-2);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -40%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
