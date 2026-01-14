@@ -1,8 +1,6 @@
 /* 
     Variables Globales y Paleta de Colores
 */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-
 :root {
     /* Colores */
     --color-primary: #999756;   /* Olive Green */
@@ -12,14 +10,14 @@
     --color-accent-3: #C8D7FA;  /* Light Blue */
     
     /* Utilidades */
-    --font-main: 'JetBrains Mono', monospace;
+    --font-main: "JetBrains Mono", monospace;
     --pixel-size: 4px; /* La base por si necesito hacer algo pixelado */
     
     --transition-speed: 0.5s;
 }
 
 /* 
-    Reset y Estilos Base
+    Estilos Base
 */
 * {
     box-sizing: border-box;
